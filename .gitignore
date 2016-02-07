@@ -1,3 +1,5 @@
 .DS_Store
 *.json
 hackathon_urls
+*.pkl
+bower_components

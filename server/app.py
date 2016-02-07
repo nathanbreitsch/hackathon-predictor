@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, send_from_directory, request
 import pickle
 import string
+from sklearn.decomposition import TruncatedSVD
 
 class PassageVectorizer():
     def __init__(self):
@@ -70,10 +71,11 @@ app = Flask(__name__)
 def get_tasks():
     data = request.get_json(force=True)
     word_vec = pv.vectorize_passage(data['description'])
-    pc = pca.trasform(word_vec)
+    print(len(word_vec))
+    pc = pca.transform(word_vec)
     result = clf.predict(pc)
 
-    return jsonify(data)
+    return jsonify({'result': result})
 
 @app.route('/static/<path:path>')
 def send_js(path):

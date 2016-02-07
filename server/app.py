@@ -3,6 +3,8 @@ from flask import Flask, jsonify, send_from_directory, request
 import pickle
 import string
 from sklearn.decomposition import TruncatedSVD
+import json
+import pandas as pd
 
 class PassageVectorizer():
     def __init__(self):
@@ -63,8 +65,27 @@ with open('./pca_transform.pkl','rb') as f:
 with open('./svm_classifier.pkl','rb') as f:
     clf = pickle.load(f)
 
+#with open('./data_output.json', 'r') as f:
+#    projects = json.load(f)
+
+with open('./2d_pca_transform.pkl', 'rb') as f:
+    pca2d = pickle.load(f)
+
+with open('./scatter_data.json', 'r') as f:
+    scatter_out = json.load(f)
+
+#scatter_data = pd.DataFrame(projects)
+#coordinates = pca2d.transform(scatter_data.word_vec.tolist()).tolist()
+#wins = scatter_data.winner.tolist()
+#combined = zip(coordinates, wins)
+#scatter_out = [{'x': float(c[0][0]), 'y': float(c[0][1]), 'w': int(c[1])} for c in combined]
+
 app = Flask(__name__)
 
+
+@app.route('/scatter/', methods=['GET'])
+def get_scatter():
+    return jsonify({"data": scatter_out})
 
 
 @app.route('/judge/', methods=['POST'])
@@ -73,7 +94,7 @@ def get_tasks():
     word_vec = pv.vectorize_passage(data['description'])
     print(len(word_vec))
     pc = pca.transform(word_vec)
-    result = clf.predict(pc)
+    result = clf.predict(pc).tolist()[0]
 
     return jsonify({'result': result})
 

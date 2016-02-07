@@ -6,6 +6,7 @@
     <script type="text/javascript" src="/static/bower_components/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="/static/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/bower_components/knockout/dist/knockout.js"></script>
+    <script type="text/javascript" src="/static/bower_components/highcharts/highcharts.js"></script>
     <script type="text/javascript" src="/static/app.js"></script>
 
   </head>
@@ -15,26 +16,37 @@
         <div class="page-header">
           <h1>Hackathon Auto-Judge <small>Will It Win?</small></h1>
         </div>
+        <div id="plot" data-bind="visible: state() == 'plot'"></div>
       </div>
 
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <textarea id="description-box" data-bind="textInput: description" rows="8" cols="50" class="form-control" placeholder="Paste your project description here"></textarea>
+          <textarea id="description-box" data-bind="textInput: description, visible: state() == 'initial'"
+          rows="8" cols="50" class="form-control" placeholder="Paste your project description here"></textarea>
+
+          <img src="/static/winnerwinnerchickendinner.png" id="winner" data-bind="visible: state() == 'winner'"/>
+          <img src="/static/dont-count-on-it.jpg" id="loser" data-bind="visible: state() == 'loser'"/>
+
         </div>
       </div>
 
+
+
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
-          <button id="judge-btn" class="btn btn-primary center-block" data-bind="click: judge, enable: description().length">
+          <button id="judge-btn" class="btn btn-primary center-block" data-bind="click: judge, enable: description().length, visible: state() == 'initial'">
               Judge
           </button>
         </div>
       </div>
 
-      <div class="row">
+      <div class="row" data-bind="visible: state() != 'initial'">
         <div class="col-md-8 col-md-offset-2">
-          <button id="dude-btn" class="btn btn-default center-block">
-              Dude... how does this work?
+          <button id="try-again-btn" class="btn btn-default " data-bind="click: function(){state('initial')}">
+              Try Again
+          </button>
+          <button id="plot-btn" class="btn btn-success" data-bind="click: drawScatter, visible: state() != 'plot'">
+              See Pretty Plot
           </button>
         </div>
       </div>

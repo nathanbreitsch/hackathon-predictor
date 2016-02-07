@@ -3,3 +3,5 @@
 hackathon_urls
 *.pkl
 bower_components
+*.png
+*.jpg
